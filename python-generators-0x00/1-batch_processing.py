@@ -33,7 +33,7 @@ def batch_processing(batch_size):
     for batch in stream_users_in_batches(batch_size):
         for user in batch:
             if user[3] > 25:  # Age is the third column
-                yield(user)
+                return(user)
 
 # Example usage of batch_processing
 print("Users older than 25:")
