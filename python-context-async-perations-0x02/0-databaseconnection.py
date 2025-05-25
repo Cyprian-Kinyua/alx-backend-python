@@ -10,7 +10,7 @@ class Databaseconn:
         print("[INFO] Opening database conn")
         self.conn = sqlite3.connect(self.db_name)
         self.cursor = self.conn.cursor()
-        return self.conn
+        return self.cursor
 
     def __exit__(self, exc_type, exc_value, traceback):
         print("[INFO] Closing database conn")
