@@ -18,6 +18,7 @@ async def async_fetch_older_users():
             print("\n📄 Users Over 40:")
             for user in older_users:
                 print(user)
+            return older_users
 
 # ✅ Function to run both queries concurrently
 async def fetch_concurrently():
