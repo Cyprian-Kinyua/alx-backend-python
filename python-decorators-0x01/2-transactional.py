@@ -40,7 +40,7 @@ def update_user_email(conn, user_id, new_email):
 def get_user_by_id(conn, user_id): 
     cursor = conn.cursor() 
     cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,)) 
-    return cursor.fetchone() 
+    return cursor.fetchone()
 
 #### Update user's email with automatic transaction handling 
 update_user_email(user_id=1, new_email='Crawford_Cartwright@hotmail.com')
