@@ -18,7 +18,10 @@ class TestGithubOrgClient(unittest.TestCase):
     ])
     @patch("client.get_json")
     def test_org(self, org_name, expected_response, mock_get_json):
-        """Test that org method returns corrext JSON and that get_json is called once with correct url"""
+        """
+        Test that org method returns corrext
+          JSON and that get_json is called once with correct url
+        """
         mock_get_json.return_value = expected_response
         client = GithubOrgClient(org_name)
         result = client.org()
@@ -29,7 +32,10 @@ class TestGithubOrgClient(unittest.TestCase):
 
     @patch("client.GithubOrgClient.org", new_callable=property)
     def test_public_repos_url(self, mock_org):
-        """Test that _public_repos_url returns the expected value from mocked org."""
+        """
+        Test that _public_repos_url returns the 
+        expected value from mocked org.
+        """
         mock_org.return_value = {
             "repos_url": "https://api.github.com/orgs/test/repos"}
         client = GithubOrgClient("testorg")
@@ -48,7 +54,8 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.return_value = expected_payload
 
         with patch(
-                'client.GithubOrgClient._public_repos_url', return_value="https://api.github.com/orgs/test/repos"
+                'client.GithubOrgClient._public_repos_url',
+                return_value="https://api.github.com/orgs/test/repos"
         ) as mock_repos_url:
             client = GithubOrgClient("testorg")
             result = client.public_repos()
