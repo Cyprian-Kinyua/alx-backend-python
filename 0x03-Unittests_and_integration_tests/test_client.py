@@ -9,14 +9,6 @@ import fixtures
 from parameterized import parameterized_class
 
 
-@parameterized_class([
-    {
-        "org_payload": fixtures.org_payload,
-        "repos_payload": fixtures.repos_payload,
-        "expected_repos": fixtures.expected_repos,
-        "apache2_repos": fixtures.apache2_repos,
-    }
-])
 class TestGithubOrgClient(unittest.TestCase):
     """Test cases for GithubOrgClient class."""
 
@@ -86,31 +78,40 @@ class TestGithubOrgClient(unittest.TestCase):
         result = GithubOrgClient.has_license(repo, license_key)
         self.assertEqual(result, expected)
 
+
+@parameterized_class([
+    {
+        "org_payload": fixtures.org_payload,
+        "repos_payload": fixtures.repos_payload,
+        "expected_repos": fixtures.expected_repos,
+        "apache2_repos": fixtures.apache2_repos,
+    }
+])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Integration test for GithubOrgClient.public_repos with mocked requests."""
+
     @classmethod
     def setUpClass(cls):
-        """Set up the mock for requests.get to return test fixtures."""
+        """Patch requests.get to return fixture-based JSON responses."""
         cls.get_patcher = patch("requests.get")
-
         mock_get = cls.get_patcher.start()
 
-        # Mock .json() responses for each URL
         mock_get.side_effect = lambda url: Mock(json=lambda: (
-            cls.org_payload if url == "https://api.github.com/orgs/testorg"
-            else cls.repos_payload
+            cls.org_payload if "orgs/testorg" in url else cls.repos_payload
         ))
 
     @classmethod
     def tearDownClass(cls):
-        """Stop the patcher after tests."""
+        """Stop patching requests.get."""
         cls.get_patcher.stop()
 
-    def test_public_repos(self):
-        """Test public_repos returns all expected repo names."""
+    def test_public_repos_integration(self):
+        """Test public_repos returns expected repo names from fixtures."""
         client = GithubOrgClient("testorg")
         self.assertEqual(client.public_repos(), self.expected_repos)
 
-    def test_public_repos_with_license(self):
-        """Test public_repos filters repos by license."""
+    def test_public_repos_with_license_integration(self):
+        """Test public_repos filters repos by license using fixtures."""
         client = GithubOrgClient("testorg")
         self.assertEqual(client.public_repos(
             license="apache-2.0"), self.apache2_repos)
